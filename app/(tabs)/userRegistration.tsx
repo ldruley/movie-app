@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { View, TextInput, Button, StyleSheet, Text } from 'react-native';
 
 const Registration = () => {
-  const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  // need database to connect 
   const handleRegister = () => {
-    console.log('Registered:', name, email, password);
+    // For simplicity, we'll just log the registration details
+    console.log('Registered:', username, email, password);
+    // Normally, you would save this data to a server or local storage
   };
 
   return (
@@ -16,9 +17,9 @@ const Registration = () => {
       <Text style={styles.header}>Registration</Text>
       <TextInput
         style={styles.input}
-        placeholder="Name"
-        value={name}
-        onChangeText={setName}
+        placeholder="Username"
+        value={username}
+        onChangeText={setUsername}
       />
       <TextInput
         style={styles.input}
