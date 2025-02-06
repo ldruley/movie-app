@@ -1,22 +1,12 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, Text, Alert, StyleSheet } from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { useRouter } from 'expo-router';  // Import useRouter
 import { getUsers } from '../../database';  // Import the getUsers function
 
-
-type AuthStackParamList = {
-  Login: undefined;
-  Register: undefined;
-};
-type LoginScreenNavigationProp = StackNavigationProp<AuthStackParamList, 'Login'>;
-
-interface Props {
-  navigation: LoginScreenNavigationProp;
-}
-
-const LoginScreen: React.FC<Props> = ({ navigation }) => {
+const LoginScreen: React.FC = () => {
   const [email, setEmail] = useState<string>('');     
   const [password, setPassword] = useState<string>(''); 
+  const router = useRouter();  
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -37,16 +27,15 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
   
       if (user) {
         Alert.alert('Success', 'Login successful!');
-        //navigation.navigate('Home');  // Navigate to Home after successful login
+        router.push('/');  // Navigate to Home
       } else {
-        Alert.alert('Error', 'Invalid email or password');
+        Alert.alert('Error', 'Invalid email / Username or password');
       }
     } catch (error) {
-      console.error('Error during login:', error);  // Log errors
+      console.error('Error during login:', error);
       Alert.alert('Error', 'There was an error while logging in');
     }
   };
-  
 
   return (
     <View style={styles.container}>
@@ -67,7 +56,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
       />
       <Button title="Login" onPress={handleLogin} />
       
-      <Text style={styles.link} onPress={() => navigation.navigate('Register')}>
+      <Text style={styles.link} onPress={() => router.push('/registerAccount')}>
         Don't have an account? Sign up
       </Text>
     </View>

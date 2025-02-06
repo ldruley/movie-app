@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, TextInput, Button, Text, Alert, StyleSheet } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { insertUser } from '../../database';
+import { useRouter } from 'expo-router';  // Import useRouter
 
 
 type AuthStackParamList = {
@@ -19,6 +20,8 @@ const RegistrationScreen: React.FC<Props> = ({ navigation }) => {
   const [username, setUsername] = useState<string>('');  
   const [email, setEmail] = useState<string>('');        
   const [password, setPassword] = useState<string>('');  
+  const router = useRouter();  // Initialize router
+  
 
   const handleRegister = async () => {
     if (!username || !email || !password) {
@@ -32,7 +35,7 @@ const RegistrationScreen: React.FC<Props> = ({ navigation }) => {
       console.log("User inserted result:", result);
   
       Alert.alert('Success', 'User registered!');
-    //    navigation.navigate('Login'); // Navigate to Login after successful registration
+        router.push('/loginScreen')
     } catch (error) {
       console.error("Error during registration:", error);
       Alert.alert('Error', 'Email already exists or invalid data');
@@ -65,7 +68,7 @@ const RegistrationScreen: React.FC<Props> = ({ navigation }) => {
         secureTextEntry
       />
       <Button title="Register" onPress={handleRegister} />
-      <Text style={styles.link} onPress={() => navigation.navigate('Login')}>
+      <Text style={styles.link} onPress={() => router.push('/loginScreen')}>
         Already have an account? Log in
       </Text>
     </View>
@@ -80,3 +83,4 @@ const styles = StyleSheet.create({
 });
 
 export default RegistrationScreen;
+

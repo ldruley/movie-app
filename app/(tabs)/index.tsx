@@ -4,7 +4,6 @@ import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-
 import { initDatabase } from '../../database';  
 
 const HomeScreen = () => {
@@ -41,6 +40,7 @@ const HomeScreen = () => {
       }>
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Search for a movie!</ThemedText>
+        
         <HelloWave />
       </ThemedView>
 
