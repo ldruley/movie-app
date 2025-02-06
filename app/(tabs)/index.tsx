@@ -1,15 +1,50 @@
-import { Image, StyleSheet, TextInput, View, Text, TouchableOpacity } from 'react-native';
+import { Image, StyleSheet, TextInput, View, Text, TouchableOpacity, FlatList, Dimensions } from 'react-native';
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
+
+type Movie = {
+  id: number;
+  title: string;
+  poster_path: string;
+};
+
 
 export default function HomeScreen() {
   const genres: string[] = ['Action','Comedy','Drama', 'Fantasy', 'Horror', 'Romance', 'Sci.-Fi.', 'Thriller'];
+  const apiURL = 'https://api.themoviedb.org/3/movie/popular?language=en-US&page=1';
+  const key = process.env.REACT_APP_WEATHER_API_KEY;
   const [showGenres, setGenres] = useState(false);
+  const [movies, setMovies] = useState<Movie[]>([]);
+
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+
+  const options = {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+      Authorization: 'Bearer ' + key
+    }
+  };
+
+  useEffect(() => {
+    fetchMovies();
+  }, []);
+
+  const fetchMovies = async () => {
+    try {
+      const response = await fetch(apiURL, options);
+      const data = await response.json();
+      setMovies(data.results);
+      console.log(data.results)
+    } catch (error) {
+      console.error('Error fetching movies:', error);
+    }
+  };
+
   const filterClick = () => {
     setGenres(!showGenres);
   }
@@ -56,6 +91,22 @@ export default function HomeScreen() {
             </View> 
           )}
       </ThemedView>
+
+      <FlatList
+      data={movies}
+      keyExtractor={(item) => item.id.toString()}
+      numColumns={2}  // Display 2 columns for the grid
+      renderItem={({ item }) => (
+        <View style={styles.movieContainer}>
+          <Image
+            source={{ uri: `https://image.tmdb.org/t/p/w500${item.poster_path}` }}
+            style={styles.moviePoster}
+          />
+          <Text style={styles.movieTitle}>{item.title}</Text>
+        </View>
+      )}
+      contentContainerStyle={styles.movieList}
+    />
     </ParallaxScrollView>
   );
 }
@@ -113,6 +164,28 @@ const styles = StyleSheet.create({
   },
   checkedBox: {
     backgroundColor: '#ccc'
-  }
+  },
+  movieList: {
+    padding: 10,
+  },
+  movieContainer: {
+    flex: 1,
+    margin: 10,
+    alignItems: 'center',
+    backgroundColor: '#f0f0f0',
+    borderRadius: 10,
+    overflow: 'hidden',
+  },
+  moviePoster: {
+    width: Dimensions.get('window').width / 2 - 40, 
+    height: 225,
+    borderRadius: 10,
+  },
+  movieTitle: {
+    marginTop: 10,
+    fontSize: 14,
+    textAlign: 'center',
+    paddingHorizontal: 5,
+  },
   
 });
