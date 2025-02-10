@@ -21,7 +21,7 @@ interface Movie {
 
 export default function HomeScreen() {
   const apiURL = 'https://api.themoviedb.org/3/movie/popular?language=en-US&page=1';
-  const key = process.env.REACT_APP_WEATHER_API_KEY;
+  const key = process.env.TMDB_API_KEY;
   const [movies, setMovies] = useState<Movie[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
