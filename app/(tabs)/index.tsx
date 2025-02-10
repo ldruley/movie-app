@@ -1,26 +1,29 @@
-import { Image, StyleSheet, TextInput, View, Text, TouchableOpacity, FlatList, Dimensions } from 'react-native';
+import { Image, StyleSheet, View, TouchableOpacity, FlatList, Dimensions, ActivityIndicator } from 'react-native';
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import React, {useState, useEffect} from 'react';
+import { Link } from 'expo-router';
+//import { Movie } from '../types/movie';
 
-type Movie = {
+interface Movie {
   id: number;
   title: string;
   poster_path: string;
-};
+  overview: string;
+  release_date: string;
+  vote_average: number;
+}
+
 
 
 export default function HomeScreen() {
-  const genres: string[] = ['Action','Comedy','Drama', 'Fantasy', 'Horror', 'Romance', 'Sci.-Fi.', 'Thriller'];
   const apiURL = 'https://api.themoviedb.org/3/movie/popular?language=en-US&page=1';
   const key = process.env.REACT_APP_WEATHER_API_KEY;
-  const [showGenres, setGenres] = useState(false);
   const [movies, setMovies] = useState<Movie[]>([]);
-
-  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const options = {
     method: 'GET',
@@ -38,75 +41,67 @@ export default function HomeScreen() {
     try {
       const response = await fetch(apiURL, options);
       const data = await response.json();
+      console.log(data);
       setMovies(data.results);
-      console.log(data.results)
+      setIsLoading(false);
     } catch (error) {
       console.error('Error fetching movies:', error);
+      setIsLoading(false);
     }
   };
 
-  const filterClick = () => {
-    setGenres(!showGenres);
+  const renderMovie = ({ item }: { item: Movie }) => (
+    <Link
+      href={{
+        pathname: "/movie/[id]" as const,
+        params: { 
+          id: item.id,
+          title: item.title,
+          poster: `https://image.tmdb.org/t/p/w500${item.poster_path}`,
+          overview: item.overview,
+          releaseDate: item.release_date,
+          voteAverage: item.vote_average
+        }
+      }}
+      asChild
+    >
+      <TouchableOpacity style={styles.movieItem}>
+        <Image
+          source={{ 
+            uri: `https://image.tmdb.org/t/p/w500${item.poster_path}`
+          }}
+          style={styles.poster}
+        />
+      </TouchableOpacity>
+    </Link>
+  );
+
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#fff" />
+      </View>
+    );
   }
-  const selectGenre = (genre: string) => {
-    setSelectedGenres((selected) => {
-      if (selected.includes(genre)) {
-        return selected.filter((item) => item !== genre);
-      } else {
-        return [...selected, genre];
-      }
-    });
-    
-  }
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
       headerImage={
         <Image
-          source={require('@/assets/images/partial-react-logo.png')}
+          source={require('@/assets/images/movie-banner.png')}
           style={styles.reactLogo}
         />
       }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Search for a movie!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-
-      <ThemedView style={styles.searchContainer}>
-        <TextInput
-          style={styles.searchInput}
-          placeholder='Search movie'
-          />
-          <TouchableOpacity onPress={filterClick} style={styles.filterBox}>
-            <Text style={styles.filterText}>Filter movies</Text>
-          </TouchableOpacity>
-          {showGenres && (
-            <View>
-              {genres.map(genre => (
-                <TouchableOpacity key={genre} onPress={() => selectGenre(genre)} style={styles.genreContainer}>
-                  <View style={[styles.checkBox, selectedGenres.includes(genre) && styles.checkedBox,]}/>
-                  <Text style={styles.genreText}>{genre}</Text>
-                </TouchableOpacity>
-              ))}
-            </View> 
-          )}
-      </ThemedView>
-
-      <FlatList
-      data={movies}
-      keyExtractor={(item) => item.id.toString()}
-      numColumns={2}  // Display 2 columns for the grid
-      renderItem={({ item }) => (
-        <View style={styles.movieContainer}>
-          <Image
-            source={{ uri: `https://image.tmdb.org/t/p/w500${item.poster_path}` }}
-            style={styles.moviePoster}
-          />
-          <Text style={styles.movieTitle}>{item.title}</Text>
-        </View>
-      )}
-      contentContainerStyle={styles.movieList}
-    />
+      <View style={styles.container}>
+        <FlatList<Movie>
+          data={movies}
+          renderItem={renderMovie}
+          keyExtractor={item => item.id.toString()}
+          numColumns={2}
+          contentContainerStyle={styles.movieGrid}
+        />
+      </View>
     </ParallaxScrollView>
   );
 }
@@ -128,64 +123,25 @@ const styles = StyleSheet.create({
     left: 0,
     position: 'absolute',
   },
-  searchContainer: {
+  container: {
+    flex: 1,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
   },
-  searchInput: {
-    height: 40,
-    width: '100%',
-    borderColor: '#ccc',
-    borderWidth: 1,
-  },
-  filterBox: {
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  filterText: {
-    height: 'auto',
-    width: 'auto',
-    borderColor: '#ccc',
-    borderWidth: 1,
-    textAlign: 'center',
-    fontSize: 16,
-  },
-  genreContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 5,
-  },
-  genreText: {
-    fontSize: 18,
-  },
-  checkBox: {
-    width: 20,
-    height: 20,
-    borderWidth: 2
-  },
-  checkedBox: {
-    backgroundColor: '#ccc'
-  },
-  movieList: {
+  movieGrid: {
     padding: 10,
   },
-  movieContainer: {
+  movieItem: {
     flex: 1,
-    margin: 10,
-    alignItems: 'center',
-    backgroundColor: '#f0f0f0',
-    borderRadius: 10,
-    overflow: 'hidden',
+    margin: 5,
   },
-  moviePoster: {
-    width: Dimensions.get('window').width / 2 - 40, 
-    height: 225,
-    borderRadius: 10,
-  },
-  movieTitle: {
-    marginTop: 10,
-    fontSize: 14,
-    textAlign: 'center',
-    paddingHorizontal: 5,
+  poster: {
+    width: '100%',
+    aspectRatio: 2/3,
+    borderRadius: 8,
   },
   
 });
