@@ -1,18 +1,24 @@
+import React, { useState, useEffect } from 'react';
 import { Image, StyleSheet, TextInput, View, Text, TouchableOpacity } from 'react-native';
-
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import React, {useState} from 'react';
+import { initDatabase } from '../../database';  
 
-export default function HomeScreen() {
-  const genres: string[] = ['Action','Comedy','Drama', 'Fantasy', 'Horror', 'Romance', 'Sci.-Fi.', 'Thriller'];
+const HomeScreen = () => {
+  useEffect(() => {
+    initDatabase();  
+  }, []);
+
+  const genres: string[] = ['Action', 'Comedy', 'Drama', 'Fantasy', 'Horror', 'Romance', 'Sci.-Fi.', 'Thriller'];
   const [showGenres, setGenres] = useState(false);
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+
   const filterClick = () => {
     setGenres(!showGenres);
-  }
+  };
+
   const selectGenre = (genre: string) => {
     setSelectedGenres((selected) => {
       if (selected.includes(genre)) {
@@ -21,8 +27,8 @@ export default function HomeScreen() {
         return [...selected, genre];
       }
     });
-    
-  }
+  };
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
@@ -34,41 +40,40 @@ export default function HomeScreen() {
       }>
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Search for a movie!</ThemedText>
+        
         <HelloWave />
       </ThemedView>
 
       <ThemedView style={styles.searchContainer}>
         <TextInput
           style={styles.searchInput}
-          placeholder='Search movie'
-          />
-          <TouchableOpacity onPress={filterClick} style={styles.filterBox}>
-            <Text style={styles.filterText}>Filter movies</Text>
-          </TouchableOpacity>
-          {showGenres && (
-            <View>
-              {genres.map(genre => (
-                <TouchableOpacity key={genre} onPress={() => selectGenre(genre)} style={styles.genreContainer}>
-                  <View style={[styles.checkBox, selectedGenres.includes(genre) && styles.checkedBox,]}/>
-                  <Text style={styles.genreText}>{genre}</Text>
-                </TouchableOpacity>
-              ))}
-            </View> 
-          )}
+          placeholder="Search movie"
+        />
+        <TouchableOpacity onPress={filterClick} style={styles.filterBox}>
+          <Text style={styles.filterText}>Filter movies</Text>
+        </TouchableOpacity>
+        {showGenres && (
+          <View>
+            {genres.map((genre) => (
+              <TouchableOpacity key={genre} onPress={() => selectGenre(genre)} style={styles.genreContainer}>
+                <View
+                  style={[styles.checkBox, selectedGenres.includes(genre) && styles.checkedBox]}
+                />
+                <Text style={styles.genreText}>{genre}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
       </ThemedView>
     </ParallaxScrollView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   titleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
   },
   reactLogo: {
     height: 178,
@@ -109,10 +114,11 @@ const styles = StyleSheet.create({
   checkBox: {
     width: 20,
     height: 20,
-    borderWidth: 2
+    borderWidth: 2,
   },
   checkedBox: {
-    backgroundColor: '#ccc'
-  }
-  
+    backgroundColor: '#ccc',
+  },
 });
+
+export default HomeScreen;
