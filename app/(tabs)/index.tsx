@@ -36,6 +36,7 @@ export default function HomeScreen() {
 
   useEffect(() => {
     fetchMovies();
+    initDatabase();
   }, []);
 
   const fetchMovies = async () => {
@@ -143,5 +144,3 @@ const styles = StyleSheet.create({
   },
   
 });
-
-export default HomeScreen;
