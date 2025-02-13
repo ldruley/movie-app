@@ -7,6 +7,7 @@ import { ThemedView } from '@/components/ThemedView';
 import React, {useState, useEffect} from 'react';
 import { Link } from 'expo-router';
 //import { Movie } from '../types/movie';
+import { initDatabase } from '../../database';  
 
 interface Movie {
   id: number;
@@ -104,17 +105,13 @@ export default function HomeScreen() {
       </View>
     </ParallaxScrollView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   titleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
   },
   reactLogo: {
     height: 178,
@@ -145,3 +142,5 @@ const styles = StyleSheet.create({
   },
   
 });
+
+export default HomeScreen;
