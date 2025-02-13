@@ -1,70 +1,108 @@
-import React, { useState, useEffect } from 'react';
-import { Image, StyleSheet, TextInput, View, Text, TouchableOpacity } from 'react-native';
+import { Image, StyleSheet, View, TouchableOpacity, FlatList, Dimensions, ActivityIndicator } from 'react-native';
+
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import React, {useState, useEffect} from 'react';
+import { Link } from 'expo-router';
+//import { Movie } from '../types/movie';
 import { initDatabase } from '../../database';  
 
-const HomeScreen = () => {
+interface Movie {
+  id: number;
+  title: string;
+  poster_path: string;
+  overview: string;
+  release_date: string;
+  vote_average: number;
+}
+
+
+
+export default function HomeScreen() {
+  const apiURL = 'https://api.themoviedb.org/3/movie/popular?language=en-US&page=1';
+  const key = process.env.TMDB_API_KEY;
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const options = {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+      Authorization: 'Bearer ' + key
+    }
+  };
+
   useEffect(() => {
-    initDatabase();  
+    fetchMovies();
   }, []);
 
-  const genres: string[] = ['Action', 'Comedy', 'Drama', 'Fantasy', 'Horror', 'Romance', 'Sci.-Fi.', 'Thriller'];
-  const [showGenres, setGenres] = useState(false);
-  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
-
-  const filterClick = () => {
-    setGenres(!showGenres);
+  const fetchMovies = async () => {
+    try {
+      const response = await fetch(apiURL, options);
+      const data = await response.json();
+      console.log(data);
+      setMovies(data.results);
+      setIsLoading(false);
+    } catch (error) {
+      console.error('Error fetching movies:', error);
+      setIsLoading(false);
+    }
   };
 
-  const selectGenre = (genre: string) => {
-    setSelectedGenres((selected) => {
-      if (selected.includes(genre)) {
-        return selected.filter((item) => item !== genre);
-      } else {
-        return [...selected, genre];
-      }
-    });
-  };
+  const renderMovie = ({ item }: { item: Movie }) => (
+    <Link
+      href={{
+        pathname: "/movie/[id]" as const,
+        params: { 
+          id: item.id,
+          title: item.title,
+          poster: `https://image.tmdb.org/t/p/w500${item.poster_path}`,
+          overview: item.overview,
+          releaseDate: item.release_date,
+          voteAverage: item.vote_average
+        }
+      }}
+      asChild
+    >
+      <TouchableOpacity style={styles.movieItem}>
+        <Image
+          source={{ 
+            uri: `https://image.tmdb.org/t/p/w500${item.poster_path}`
+          }}
+          style={styles.poster}
+        />
+      </TouchableOpacity>
+    </Link>
+  );
+
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#fff" />
+      </View>
+    );
+  }
 
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
       headerImage={
         <Image
-          source={require('@/assets/images/partial-react-logo.png')}
+          source={require('@/assets/images/movie-banner.png')}
           style={styles.reactLogo}
         />
       }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Search for a movie!</ThemedText>
-        
-        <HelloWave />
-      </ThemedView>
-
-      <ThemedView style={styles.searchContainer}>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Search movie"
+      <View style={styles.container}>
+        <FlatList<Movie>
+          data={movies}
+          renderItem={renderMovie}
+          keyExtractor={item => item.id.toString()}
+          numColumns={2}
+          contentContainerStyle={styles.movieGrid}
         />
-        <TouchableOpacity onPress={filterClick} style={styles.filterBox}>
-          <Text style={styles.filterText}>Filter movies</Text>
-        </TouchableOpacity>
-        {showGenres && (
-          <View>
-            {genres.map((genre) => (
-              <TouchableOpacity key={genre} onPress={() => selectGenre(genre)} style={styles.genreContainer}>
-                <View
-                  style={[styles.checkBox, selectedGenres.includes(genre) && styles.checkedBox]}
-                />
-                <Text style={styles.genreText}>{genre}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        )}
-      </ThemedView>
+      </View>
     </ParallaxScrollView>
   );
 };
@@ -82,43 +120,27 @@ const styles = StyleSheet.create({
     left: 0,
     position: 'absolute',
   },
-  searchContainer: {
+  container: {
+    flex: 1,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
   },
-  searchInput: {
-    height: 40,
+  movieGrid: {
+    padding: 10,
+  },
+  movieItem: {
+    flex: 1,
+    margin: 5,
+  },
+  poster: {
     width: '100%',
-    borderColor: '#ccc',
-    borderWidth: 1,
+    aspectRatio: 2/3,
+    borderRadius: 8,
   },
-  filterBox: {
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  filterText: {
-    height: 'auto',
-    width: 'auto',
-    borderColor: '#ccc',
-    borderWidth: 1,
-    textAlign: 'center',
-    fontSize: 16,
-  },
-  genreContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 5,
-  },
-  genreText: {
-    fontSize: 18,
-  },
-  checkBox: {
-    width: 20,
-    height: 20,
-    borderWidth: 2,
-  },
-  checkedBox: {
-    backgroundColor: '#ccc',
-  },
+  
 });
 
 export default HomeScreen;
