@@ -21,18 +21,10 @@ interface Movie {
 
 
 export default function HomeScreen() {
-  const apiURL = 'https://api.themoviedb.org/3/movie/popular?language=en-US&page=1';
-  const key = process.env.TMDB_API_KEY;
+  const API_KEY = '44ec8af5d85873cf6fb611abda4911da';
+  const BASE_URL = 'https://api.themoviedb.org/3';
   const [movies, setMovies] = useState<Movie[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  const options = {
-    method: 'GET',
-    headers: {
-      accept: 'application/json',
-      Authorization: 'Bearer ' + key
-    }
-  };
 
   useEffect(() => {
     fetchMovies();
@@ -41,7 +33,8 @@ export default function HomeScreen() {
 
   const fetchMovies = async () => {
     try {
-      const response = await fetch(apiURL, options);
+      let url = `${BASE_URL}/movie/popular?language=en-US&page=1&api_key=${API_KEY}`;
+      const response = await fetch(url);
       const data = await response.json();
       console.log(data);
       setMovies(data.results);
@@ -66,7 +59,7 @@ export default function HomeScreen() {
         }
       }}
       asChild
-    >
+    > 
       <TouchableOpacity style={styles.movieItem}>
         <Image
           source={{ 
