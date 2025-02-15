@@ -17,6 +17,7 @@ export default function HomeScreen() {
   const [searchMovie, setSearch] = useState('');
   const [searchedMovie, setSearched] = useState<any[]>([]);
   const [searchedGenres, setSearchedGenres] = useState<any[]>([]);
+  const [searchedMovieDetails, setMovieDetails] = useState<Movie | null>(null);
 
   const displayGenres = async () => {
     try {
@@ -75,6 +76,14 @@ export default function HomeScreen() {
     }
   };
 
+  const clickMovie = (movie: Movie) => {
+    if (searchedMovieDetails?.id === movie.id) {
+      setMovieDetails(null);
+    } else {
+    setMovieDetails(movie);
+    }
+  };
+
 
   return (
     <ParallaxScrollView 
@@ -87,7 +96,6 @@ export default function HomeScreen() {
       }>
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Search for a movie!</ThemedText>
-        <HelloWave />
       </ThemedView>
 
 
@@ -99,7 +107,7 @@ export default function HomeScreen() {
           value={searchMovie}
           onChangeText={setSearch}
           />
-          <TouchableOpacity onPress={search} style={styles.filterBox}>
+          <TouchableOpacity onPress={search} style={styles.searchBox}>
             // Search button for movies types into text input
             <Text style={styles.filterText}>Search</Text>
           </TouchableOpacity>
@@ -121,11 +129,22 @@ export default function HomeScreen() {
       <FlatList
         data={searchedMovie}
         renderItem={({item}) => {
+          const moviePoster = `https://image.tmdb.org/t/p/w500${item.poster_path}`;
           return(
-          <View style={styles.movieContainer}>
-            <Text style={styles.movieTitle}>{item.title} ({item.release_date})</Text>
-            <Text>{item.overview}</Text>
-          </View>
+            <View style={styles.movieContainer}>
+              <TouchableOpacity onPress={() => clickMovie(item)} style={styles.movieContainer}>
+                <Image
+                  source={{uri: moviePoster}}
+                  style={styles.poster}
+                  />
+                  <Text style={styles.movieTitle}>{item.title} ({item.release_date})</Text>
+              </TouchableOpacity>
+              {searchedMovieDetails?.id === item.id && searchedMovieDetails?.overview && (
+                <View style={styles.searchedMovieDetailsContainer}>
+                  <Text style={styles.movieDetails}>{searchedMovieDetails.overview}</Text>
+                </View>
+              )}
+            </View>
           );
         }}
         keyExtractor={(item) => item.id.toString()}
@@ -133,7 +152,6 @@ export default function HomeScreen() {
     </ParallaxScrollView>
   );
 }
-
 
 const styles = StyleSheet.create({
   titleContainer: {
@@ -161,17 +179,28 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderWidth: 1,
   },
+  searchBox: {
+    backgroundColor: "#007bff",
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    marginTop: 10,
+  },
   filterBox: {
     alignItems: 'center',
     marginTop: 8,
+    backgroundColor: '#ccc',
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 10,
   },
   filterText: {
     height: 'auto',
     width: 'auto',
     borderColor: '#ccc',
-    borderWidth: 1,
     textAlign: 'center',
     fontSize: 16,
+    color: 'white',
   },
   genreContainer: {
     flexDirection: 'row',
@@ -184,7 +213,8 @@ const styles = StyleSheet.create({
   checkBox: {
     width: 20,
     height: 20,
-    borderWidth: 2
+    borderWidth: 2,
+    marginRight: 5,
   },
   checkedBox: {
     backgroundColor: '#ccc'
@@ -195,8 +225,18 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     marginTop: 10,
   },
+  poster: {
+    width: '100%',
+    height: 300,
+  },
   movieTitle: {
-    fontSize: 18
+    fontSize: 20,
+  },
+  searchedMovieDetailsContainer: {
+    padding: 10,
+  },
+  movieDetails: {
+    fontSize: 16,
   },
  
 });
