@@ -4,12 +4,9 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import React, {useState} from 'react';
-import { ScrollView } from 'react-native-gesture-handler';
-
 
 const API_KEY = '5382c57e3a10e4ee81ac236e9d652dac';
 const BASE_URL = 'https://api.themoviedb.org/3';
-
 
 export default function HomeScreen() {
   const [showGenres, setGenres] = useState(false);
@@ -19,6 +16,7 @@ export default function HomeScreen() {
   const [searchedGenres, setSearchedGenres] = useState<any[]>([]);
   const [searchedMovieDetails, setMovieDetails] = useState<Movie | null>(null);
 
+  // Displays genres from API
   const displayGenres = async () => {
     try {
       let url = `${BASE_URL}/genre/movie/list?api_key=${API_KEY}`;
@@ -30,6 +28,7 @@ export default function HomeScreen() {
     }
   };
  
+  // Show genres for movies
   const filterClick = () => {
     if (!showGenres) {
       displayGenres();
@@ -37,6 +36,7 @@ export default function HomeScreen() {
     setGenres(!showGenres);
   };
 
+  // Selecting/deselecting genres
   const selectGenre = (genreId: number) => {
     setSelectedGenres((selected) => {
       if (selected.includes(genreId)) {
@@ -55,6 +55,7 @@ export default function HomeScreen() {
     genre_ids: number[]
   }
 
+  // Searches for movies based on text input
   const search = async () => {
     if (searchMovie.trim()) {
       try {
@@ -76,6 +77,7 @@ export default function HomeScreen() {
     }
   };
 
+  // Select searched movies to show details
   const clickMovie = (movie: Movie) => {
     if (searchedMovieDetails?.id === movie.id) {
       setMovieDetails(null);
