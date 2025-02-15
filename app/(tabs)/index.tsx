@@ -1,13 +1,10 @@
 import { Image, StyleSheet, View, TouchableOpacity, FlatList, Dimensions, ActivityIndicator } from 'react-native';
-
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 import React, {useState, useEffect} from 'react';
 import { Link } from 'expo-router';
 //import { Movie } from '../types/movie';
 import { initDatabase } from '../../database';  
+import { Stack, useNavigation } from 'expo-router';
 
 interface Movie {
   id: number;
@@ -16,20 +13,21 @@ interface Movie {
   overview: string;
   release_date: string;
   vote_average: number;
+  backdrop_path: string;
 }
-
-
 
 export default function HomeScreen() {
   const API_KEY = '44ec8af5d85873cf6fb611abda4911da';
   const BASE_URL = 'https://api.themoviedb.org/3';
   const [movies, setMovies] = useState<Movie[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const navigation = useNavigation();
 
   useEffect(() => {
     fetchMovies();
     initDatabase();
-  }, []);
+    navigation.setOptions({ headerShown: true });
+  }, [navigation]);
 
   const fetchMovies = async () => {
     try {
@@ -55,7 +53,8 @@ export default function HomeScreen() {
           poster: `https://image.tmdb.org/t/p/w500${item.poster_path}`,
           overview: item.overview,
           releaseDate: item.release_date,
-          voteAverage: item.vote_average
+          voteAverage: item.vote_average,
+          backdrop: `https://image.tmdb.org/t/p/w500${item.backdrop_path}`,
         }
       }}
       asChild
@@ -73,22 +72,19 @@ export default function HomeScreen() {
 
   if (isLoading) {
     return (
-      <View style={styles.loadingContainer}>
+      <View>
         <ActivityIndicator size="large" color="#fff" />
       </View>
     );
   }
 
   return (
-    <ParallaxScrollView 
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47'}}
-      headerImage={
-        <Image
-          source={require('@/assets/images/movie-banner.png')}
-          style={styles.reactLogo}
-        />
-      }>
+
       <View style={styles.container}>
+        <View style={{ paddingVertical: 15 }}>
+          <ThemedText style={styles.headerTitle}>Trending Movies</ThemedText>
+        </View>
+          
         <FlatList<Movie>
           data={movies}
           renderItem={renderMovie}
@@ -97,25 +93,20 @@ export default function HomeScreen() {
           contentContainerStyle={styles.movieGrid}
         />
       </View>
-    </ParallaxScrollView>
+    
   );
 };
 
-
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+
+  headerTitle: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: '#000000',
+    textAlign: 'center',
   },
   container: {
+    paddingTop: 30,
     flex: 1,
   },
   loadingContainer: {
@@ -135,5 +126,4 @@ const styles = StyleSheet.create({
     aspectRatio: 2/3,
     borderRadius: 8,
   },
-  
 });
