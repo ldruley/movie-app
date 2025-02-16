@@ -3,7 +3,7 @@
 [Github Repo](https://github.com/ldruley/movie-app)
 
 ## Overview
-This is a movie  that makes use of an API we found [here](https://github.com/public-apis/public-apis?tab=readme-ov-file).
+This is a movie app that makes use of an API we found [here](https://github.com/public-apis/public-apis?tab=readme-ov-file).
 
 We got styling help for this document from [this guide](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
 
