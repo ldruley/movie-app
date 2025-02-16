@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { 
   View, Text, TextInput, TouchableOpacity, ActivityIndicator, 
   FlatList, Image, StyleSheet 
 } from "react-native";
+import { useNavigation } from 'expo-router';
 
 const API_KEY = "96f3348c905dce82f4e2e2f636f6b8cc";
 const BASE_URL = "https://api.themoviedb.org/3";
@@ -19,6 +20,11 @@ const MovieSearch: React.FC = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const navigation = useNavigation();
+
+  useEffect(() => {
+      navigation.setOptions({ title: 'People', headerShown: true });
+  }, [navigation]);
 
   const searchPerson = async () => {
     if (!query.trim()) {

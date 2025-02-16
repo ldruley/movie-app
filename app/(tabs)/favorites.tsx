@@ -1,5 +1,4 @@
 import { Image, StyleSheet, View, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
-import { ThemedText } from '@/components/ThemedText';
 import React, {useState, useEffect, useCallback} from 'react';
 import { Link } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
@@ -106,6 +105,7 @@ const styles = StyleSheet.create({
     container: {
       paddingTop: 15,
       flex: 1,
+      backgroundColor: '#212120'
     },
     loadingContainer: {
       flex: 1,
