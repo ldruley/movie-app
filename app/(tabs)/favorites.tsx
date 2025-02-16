@@ -1,8 +1,8 @@
 import { Image, StyleSheet, View, TouchableOpacity, FlatList, Dimensions, ActivityIndicator } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import { Link } from 'expo-router';
-
+import { useFocusEffect } from '@react-navigation/native';
 import { Stack, useNavigation } from 'expo-router';
 
 interface Movie {
@@ -15,8 +15,6 @@ interface Movie {
     backdrop_path: string;
   }
 
-
-
 const favorites : React.FC = () => {
     const TMDB_API_KEY = '44ec8af5d85873cf6fb611abda4911da';
     const ACCOUNT_ID = '21771161';
@@ -27,17 +25,22 @@ const favorites : React.FC = () => {
     const navigation = useNavigation();
 
     useEffect(() => {
-        fetchMovies();
         navigation.setOptions({ headerShown: true });
     }, [navigation]);
 
+    useFocusEffect(
+      useCallback(() => {
+        fetchMovies();
+      }, [])
+    );
+
     const fetchMovies = async () => {
         try {
-          let url = `https://api.themoviedb.org/3/account/${ACCOUNT_ID}/favorite/movies?api_key=${TMDB_API_KEY}&session_id=${SESSION_ID}&language=en-US&page=1&sort_by=created_at.asc'`;
+          let url = `https://api.themoviedb.org/3/list/8512518?api_key=${TMDB_API_KEY}&session_id=${SESSION_ID}&language=en-US&page=1`;
           const response = await fetch(url);
           const data = await response.json();
           console.log(data);
-          setMovies(data.results);
+          setMovies(data.items);
           setIsLoading(false);
         } catch (error) {
           console.error('Error fetching movies:', error);
@@ -46,6 +49,7 @@ const favorites : React.FC = () => {
       };
 
     const renderMovie = ({ item }: { item: Movie }) => (
+      <View style={styles.movieWrapper}>
         <Link
         href={{
             pathname: "/movie/[id]" as const,
@@ -70,6 +74,7 @@ const favorites : React.FC = () => {
             />
         </TouchableOpacity>
         </Link>
+    </View>
     );
     
     if (isLoading) {
@@ -80,21 +85,19 @@ const favorites : React.FC = () => {
         );
     }
     return (
-    
-            <View style={styles.container}>
-            <View style={{ paddingVertical: 15 }}>
-                <ThemedText style={styles.headerTitle}>Trending Movies</ThemedText>
-            </View>
-                
-            <FlatList<Movie>
-                data={movies}
-                renderItem={renderMovie}
-                keyExtractor={item => item.id.toString()}
-                numColumns={2}
-                contentContainerStyle={styles.movieGrid}
-            />
-            </View>
-        
+      <View style={styles.container}>
+        <View style={{ paddingVertical: 15 }}>
+            <ThemedText style={styles.headerTitle}>Favorites</ThemedText>
+        </View>
+            
+        <FlatList<Movie>
+            data={movies}
+            renderItem={renderMovie}
+            keyExtractor={item => item.id.toString()}
+            numColumns={2}
+            contentContainerStyle={styles.movieGrid}
+        />
+      </View>
     );
 
 };
@@ -108,7 +111,7 @@ const styles = StyleSheet.create({
       textAlign: 'center',
     },
     container: {
-      paddingTop: 30,
+      paddingTop: 0,
       flex: 1,
     },
     loadingContainer: {
@@ -116,12 +119,16 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
     },
+    movieWrapper: {
+      flex: 1, 
+      maxWidth: '50%',
+      padding: 5, 
+  },
     movieGrid: {
       padding: 10,
     },
     movieItem: {
       flex: 1,
-      margin: 5,
     },
     poster: {
       width: '100%',

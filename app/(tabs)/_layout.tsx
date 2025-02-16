@@ -43,9 +43,25 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="search"
+        options={{
+          // href: null,
+          title: 'Search',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="viewByDirector"
+        options={{
+          // href: null,
+          title: 'Actors',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="favorites"
         options={{
-          title: 'favorites',
+          title: 'My Favorites',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
         }}
       />
@@ -53,7 +69,15 @@ export default function TabLayout() {
         name="loginScreen"
         options={{
           // href: null,
-          title: 'loginScreen',
+          title: 'Login',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="registerAccount"
+        options={{
+          // href: null,
+          title: 'Register',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
         }}
       />

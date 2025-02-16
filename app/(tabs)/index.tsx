@@ -44,10 +44,11 @@ export default function HomeScreen() {
   };
 
   const renderMovie = ({ item }: { item: Movie }) => (
-    <Link
+    <View style={styles.movieWrapper}>
+      <Link
       href={{
-        pathname: "/movie/[id]" as const,
-        params: { 
+          pathname: "/movie/[id]" as const,
+          params: { 
           id: item.id,
           title: item.title,
           poster: `https://image.tmdb.org/t/p/w500${item.poster_path}`,
@@ -55,19 +56,20 @@ export default function HomeScreen() {
           releaseDate: item.release_date,
           voteAverage: item.vote_average,
           backdrop: `https://image.tmdb.org/t/p/w500${item.backdrop_path}`,
-        }
+          }
       }}
       asChild
-    > 
-      <TouchableOpacity style={styles.movieItem}>
-        <Image
-          source={{ 
-            uri: `https://image.tmdb.org/t/p/w500${item.poster_path}`
-          }}
-          style={styles.poster}
-        />
-      </TouchableOpacity>
-    </Link>
+      > 
+        <TouchableOpacity style={styles.movieItem}>
+            <Image
+            source={{ 
+                uri: `https://image.tmdb.org/t/p/w500${item.poster_path}`
+            }}
+            style={styles.poster}
+            />
+        </TouchableOpacity>
+      </Link>
+    </View>
   );
 
   if (isLoading) {
@@ -106,7 +108,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   container: {
-    paddingTop: 30,
+    paddingTop: 0,
     flex: 1,
   },
   loadingContainer: {
@@ -114,12 +116,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  movieWrapper: {
+    flex: 1, 
+    maxWidth: '50%',
+    padding: 5, 
+},
   movieGrid: {
     padding: 10,
   },
   movieItem: {
     flex: 1,
-    margin: 5,
   },
   poster: {
     width: '100%',

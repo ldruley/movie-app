@@ -1,5 +1,7 @@
 import { View, Image, Text, StyleSheet, ScrollView, SafeAreaView, Pressable, Alert } from 'react-native';
 import { useLocalSearchParams, Stack } from 'expo-router';
+import { useEffect, useState, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function MovieDetails() {
   const { id, title, poster, overview, releaseDate, voteAverage, backdrop } = useLocalSearchParams();
@@ -17,31 +19,52 @@ export default function MovieDetails() {
       return dateString;
     }
   };
+  const [isFav, setIsFavorite] = useState(false);
 
-  const addToFavorites = async () => {
+  useFocusEffect(
+    useCallback(() => {
+      checkFavorites();
+    }, [])
+  );
+
+  const checkFavorites = async () => {
     try {
+      const url = `https://api.themoviedb.org/3/list/8512518/item_status?api_key=${TMDB_API_KEY}&session_id=${SESSION_ID}&movie_id=${id}&language=en-US&movie_id=939243`;
+      const response = await fetch(url);
+      const data = await response.json();
+      console.log(data);
+      if(data.item_present === true) {
+        setIsFavorite(true);
+        console.log('true');
+      } else {
+        setIsFavorite(false);
+        console.log('false');
+      }
+      } catch (error) {
+        console.log(error);
+      }
+       
+  };
+  const toggleFavorite = async () => {
+    try {
+      const url = isFav
+      ? `https://api.themoviedb.org/3/list/8512518/remove_item?api_key=${TMDB_API_KEY}&session_id=${SESSION_ID}`
+      : `https://api.themoviedb.org/3/list/8512518/add_item?api_key=${TMDB_API_KEY}&session_id=${SESSION_ID}`;
+
       const response = await fetch(
-        `https://api.themoviedb.org/3/account/${ACCOUNT_ID}/favorite?api_key=${TMDB_API_KEY}&session_id=${SESSION_ID}`,
+        url,
         {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            media_type: 'movie',
-            media_id: id,
-            favorite: true,
-          }),
-        }
-      );
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ media_id: id }),
+      });
 
       const data = await response.json();
-
       if (response.ok) {
-        Alert.alert('Success', `${title} added to favorites!`);
+        setIsFavorite(!isFav);
+        Alert.alert('Success', `${title} has been ${isFav ? 'removed from' : 'added to'} favorites!`);
       } else {
-        console.log(data)
-        Alert.alert('Error', data.status_message || 'Failed to add movie to favorites.');
+        Alert.alert('Error', data.status_message || 'Failed to update favorites.');
       }
     } catch (error) {
       Alert.alert('Error', 'Something went wrong. Please try again.');
@@ -77,8 +100,10 @@ export default function MovieDetails() {
             <Text style={styles.overviewTitle}>Overview</Text>
             <Text style={styles.overview}>{overview}</Text>
           </View>
-          <Pressable style={styles.favoriteButton} onPress={addToFavorites}>
-            <Text style={styles.favoriteButtonText}>Add to Favorites</Text>
+          <Pressable style={[styles.favoriteButton, isFav ? styles.favoriteButtonActive : {}]} onPress={toggleFavorite}>
+            <Text style={styles.favoriteButtonText}>
+              {isFav ? 'Remove from Favorites' : 'Add to Favorites'}
+            </Text>
           </Pressable>
         </View>
       </ScrollView>
@@ -166,6 +191,9 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
+  },
+  favoriteButtonActive: {
+    backgroundColor: '#34a1eb',
   },
   favoriteButtonText: {
     fontSize: 18,
