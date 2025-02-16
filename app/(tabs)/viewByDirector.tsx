@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { 
-  View, Text, TextInput, TouchableOpacity, ActivityIndicator, 
-  FlatList, Image, StyleSheet 
+import {
+  View, Text, TextInput, TouchableOpacity, ActivityIndicator,
+  FlatList, Image, StyleSheet
 } from "react-native";
-import { useNavigation } from 'expo-router';
+import { Link, useNavigation } from 'expo-router';
 
 const API_KEY = "96f3348c905dce82f4e2e2f636f6b8cc";
 const BASE_URL = "https://api.themoviedb.org/3";
@@ -11,8 +11,11 @@ const BASE_URL = "https://api.themoviedb.org/3";
 interface Movie {
   id: number;
   title: string;
-  release_date?: string;
-  poster_path?: string;
+  poster_path: string;
+  overview: string;
+  release_date: string;
+  vote_average: number;
+  backdrop_path: string;
 }
 
 const MovieSearch: React.FC = () => {
@@ -23,7 +26,7 @@ const MovieSearch: React.FC = () => {
   const navigation = useNavigation();
 
   useEffect(() => {
-      navigation.setOptions({ title: 'People', headerShown: true });
+    navigation.setOptions({ title: 'People', headerShown: true });
   }, [navigation]);
 
   const searchPerson = async () => {
@@ -37,7 +40,7 @@ const MovieSearch: React.FC = () => {
     setMovies([]);
 
     try {
-      
+
       const response = await fetch(`${BASE_URL}/search/person?api_key=${API_KEY}&query=${encodeURIComponent(query)}`);
       if (!response.ok) throw new Error("Failed to fetch person data");
 
@@ -61,7 +64,7 @@ const MovieSearch: React.FC = () => {
 
       // Sort from newest to oldest
       const sortedMovies = creditsData.cast
-        .filter((movie: Movie) => movie.release_date) 
+        .filter((movie: Movie) => movie.release_date)
         .sort((a: Movie, b: Movie) => (b.release_date! > a.release_date! ? 1 : -1));
 
       setMovies(sortedMovies);
@@ -74,7 +77,7 @@ const MovieSearch: React.FC = () => {
 
   return (
     <View style={styles.container}>
-        
+
       <Text style={styles.title}>{"\n"}{"\n"}Search Movies by Director/Actor</Text>
 
       <View style={styles.inputContainer}>
@@ -89,10 +92,10 @@ const MovieSearch: React.FC = () => {
         </TouchableOpacity>
       </View>
 
-      
+
       {loading && <ActivityIndicator size="large" color="#007bff" />}
 
-      
+
       {error ? <Text style={styles.error}>{error}</Text> : null}
 
       {/* Movies List */}
@@ -100,17 +103,38 @@ const MovieSearch: React.FC = () => {
         data={movies}
         keyExtractor={(movie) => movie.id.toString()}
         renderItem={({ item }) => (
-          <View style={styles.movieCard}>
-            {item.poster_path ? (
-              <Image source={{ uri: `https://image.tmdb.org/t/p/w200${item.poster_path}` }} style={styles.image} />
-            ) : (
-              <View style={styles.noImage}>
-                <Text style={styles.noImageText}>No Image</Text>
+          <Link
+            href={{
+              pathname: "/movie/[id]" as const,
+              params: {
+                id: item.id,
+                title: item.title,
+                poster: `https://image.tmdb.org/t/p/w500${item.poster_path}`,
+                overview: item.overview,
+                releaseDate: item.release_date,
+                voteAverage: item.vote_average,
+                backdrop: `https://image.tmdb.org/t/p/w500${item.backdrop_path}`,
+              }
+            }}
+            asChild >
+            <TouchableOpacity>
+              <View style={styles.movieCard}>
+
+
+                {item.poster_path ? (
+                  <Image source={{ uri: `https://image.tmdb.org/t/p/w200${item.poster_path}` }} style={styles.image} />
+                ) : (
+                  <View style={styles.noImage}>
+                    <Text style={styles.noImageText}>No Image</Text>
+                  </View>
+                )}
+                <Text style={styles.movieTitle}>{item.title}</Text>
+                {item.release_date && <Text style={styles.releaseDate}>{item.release_date}</Text>}
+
+
               </View>
-            )}
-            <Text style={styles.movieTitle}>{item.title}</Text>
-            {item.release_date && <Text style={styles.releaseDate}>{item.release_date}</Text>}
-          </View>
+            </TouchableOpacity>
+          </Link>
         )}
       />
     </View>
@@ -159,18 +183,21 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   movieCard: {
+    flex: 1,
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 5,
     padding: 10,
     marginBottom: 10,
     alignItems: "center",
+    justifyContent: "center",
     backgroundColor: "#f9f9f9",
   },
   image: {
     width: 100,
     height: 150,
     borderRadius: 5,
+
   },
   noImage: {
     width: 100,
