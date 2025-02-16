@@ -1,9 +1,11 @@
-import { View, Image, Text, StyleSheet, ScrollView, SafeAreaView } from 'react-native';
+import { View, Image, Text, StyleSheet, ScrollView, SafeAreaView, Pressable, Alert } from 'react-native';
 import { useLocalSearchParams, Stack } from 'expo-router';
 
 export default function MovieDetails() {
   const { id, title, poster, overview, releaseDate, voteAverage, backdrop } = useLocalSearchParams();
-  
+  const TMDB_API_KEY = '44ec8af5d85873cf6fb611abda4911da';
+  const ACCOUNT_ID = '21771161';
+  const SESSION_ID = '7ab47c74efc5f1efef6cbbddb5f155f8095f1796'
   const formatDate = (dateString) => {
     try {
       return new Date(dateString).toLocaleDateString('en-US', {
@@ -13,6 +15,36 @@ export default function MovieDetails() {
       });
     } catch (error) {
       return dateString;
+    }
+  };
+
+  const addToFavorites = async () => {
+    try {
+      const response = await fetch(
+        `https://api.themoviedb.org/3/account/${ACCOUNT_ID}/favorite?api_key=${TMDB_API_KEY}&session_id=${SESSION_ID}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            media_type: 'movie',
+            media_id: id,
+            favorite: true,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        Alert.alert('Success', `${title} added to favorites!`);
+      } else {
+        console.log(data)
+        Alert.alert('Error', data.status_message || 'Failed to add movie to favorites.');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Something went wrong. Please try again.');
     }
   };
 
@@ -45,6 +77,9 @@ export default function MovieDetails() {
             <Text style={styles.overviewTitle}>Overview</Text>
             <Text style={styles.overview}>{overview}</Text>
           </View>
+          <Pressable style={styles.favoriteButton} onPress={addToFavorites}>
+            <Text style={styles.favoriteButtonText}>Add to Favorites</Text>
+          </Pressable>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -124,5 +159,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     color: '#e0e0e0',
-  }
+  },
+  favoriteButton: {
+    marginTop: 20,
+    backgroundColor: '#e50914',
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  favoriteButtonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#ffffff',
+  },
 });
