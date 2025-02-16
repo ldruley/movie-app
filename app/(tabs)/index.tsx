@@ -1,10 +1,10 @@
-import { Image, StyleSheet, View, TouchableOpacity, FlatList, Dimensions, ActivityIndicator } from 'react-native';
+import { Image, StyleSheet, View, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import React, {useState, useEffect} from 'react';
 import { Link } from 'expo-router';
 //import { Movie } from '../types/movie';
 import { initDatabase } from '../../database';  
-import { Stack, useNavigation } from 'expo-router';
+import { useNavigation } from 'expo-router';
 
 interface Movie {
   id: number;
@@ -23,18 +23,19 @@ export default function HomeScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation();
 
+  //on load, create/get database and fetch trending movies, set navigation header
   useEffect(() => {
     fetchMovies();
     initDatabase();
     navigation.setOptions({ headerShown: true });
   }, [navigation]);
 
+  //Fetch trending movies from api
   const fetchMovies = async () => {
     try {
       let url = `${BASE_URL}/movie/popular?language=en-US&page=1&api_key=${API_KEY}`;
       const response = await fetch(url);
       const data = await response.json();
-      console.log(data);
       setMovies(data.results);
       setIsLoading(false);
     } catch (error) {
@@ -43,11 +44,13 @@ export default function HomeScreen() {
     }
   };
 
+  //Render movie list
   const renderMovie = ({ item }: { item: Movie }) => (
-    <Link
+    <View style={styles.movieWrapper}>
+      <Link
       href={{
-        pathname: "/movie/[id]" as const,
-        params: { 
+          pathname: "/movie/[id]" as const,
+          params: { 
           id: item.id,
           title: item.title,
           poster: `https://image.tmdb.org/t/p/w500${item.poster_path}`,
@@ -55,21 +58,23 @@ export default function HomeScreen() {
           releaseDate: item.release_date,
           voteAverage: item.vote_average,
           backdrop: `https://image.tmdb.org/t/p/w500${item.backdrop_path}`,
-        }
+          }
       }}
       asChild
-    > 
-      <TouchableOpacity style={styles.movieItem}>
-        <Image
-          source={{ 
-            uri: `https://image.tmdb.org/t/p/w500${item.poster_path}`
-          }}
-          style={styles.poster}
-        />
-      </TouchableOpacity>
-    </Link>
+      > 
+        <TouchableOpacity style={styles.movieItem}>
+            <Image
+            source={{ 
+                uri: `https://image.tmdb.org/t/p/w500${item.poster_path}`
+            }}
+            style={styles.poster}
+            />
+        </TouchableOpacity>
+      </Link>
+    </View>
   );
 
+  //Display loading indicator while fetching movies
   if (isLoading) {
     return (
       <View>
@@ -79,7 +84,6 @@ export default function HomeScreen() {
   }
 
   return (
-
       <View style={styles.container}>
         <View style={{ paddingVertical: 15 }}>
           <ThemedText style={styles.headerTitle}>Trending Movies</ThemedText>
@@ -93,20 +97,18 @@ export default function HomeScreen() {
           contentContainerStyle={styles.movieGrid}
         />
       </View>
-    
   );
 };
 
 const styles = StyleSheet.create({
-
   headerTitle: {
     fontSize: 25,
     fontWeight: 'bold',
-    color: '#000000',
     textAlign: 'center',
   },
   container: {
-    paddingTop: 30,
+    paddingTop: 15,
+    backgroundColor: '#212120',
     flex: 1,
   },
   loadingContainer: {
@@ -114,12 +116,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  movieWrapper: {
+    flex: 1, 
+    maxWidth: '50%',
+    padding: 5, 
+},
   movieGrid: {
     padding: 10,
   },
   movieItem: {
     flex: 1,
-    margin: 5,
   },
   poster: {
     width: '100%',
