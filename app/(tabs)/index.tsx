@@ -104,11 +104,11 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 25,
     fontWeight: 'bold',
-    color: '#000000',
+    color: '#fff',
     textAlign: 'center',
   },
   container: {
-    paddingTop: 0,
+    paddingTop: 15,
     flex: 1,
   },
   loadingContainer: {

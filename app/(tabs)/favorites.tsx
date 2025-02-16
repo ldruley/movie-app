@@ -90,11 +90,7 @@ const favorites : React.FC = () => {
     }
 
     return (
-      <View style={styles.container}>
-        <View style={{ paddingVertical: 15 }}>
-            <ThemedText style={styles.headerTitle}>Favorites</ThemedText>
-        </View>
-            
+      <View style={styles.container}>       
         <FlatList<Movie>
             data={movies}
             renderItem={renderMovie}
@@ -107,15 +103,8 @@ const favorites : React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-
-    headerTitle: {
-      fontSize: 25,
-      fontWeight: 'bold',
-      color: '#000000',
-      textAlign: 'center',
-    },
     container: {
-      paddingTop: 0,
+      paddingTop: 15,
       flex: 1,
     },
     loadingContainer: {
