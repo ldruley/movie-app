@@ -11,7 +11,7 @@ We got styling help for this document from [this guide](https://docs.github.com/
 
 * We primarily coordinated via slack and in-class meetings
 * We originally planned 14 stories
-* We completed 12, having lost 1 team member, cutting two stories. Others were merged during development into a single
+* We completed 12, having lost 1 team member, cutting two stories. Others were merged during development into a single feature
 
 ## Team Retrospective
 
