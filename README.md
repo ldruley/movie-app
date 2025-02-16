@@ -1,50 +1,60 @@
-1# Welcome to your Expo app 👋
+# Project 01 Retrospective and overview
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+[Github Repo](https://github.com/ldruley/movie-app)
 
-## Get started
+## Overview
+This is a movie  that makes use of an API we found [here](https://github.com/public-apis/public-apis?tab=readme-ov-file).
 
-1. Install dependencies
+We got styling help for this document from [this guide](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
 
-   ```bash
-   npm install
-   ```
+## Introduction
 
-2. Start the app
+* We primarily coordinated via slack and in-class meetings
+* We originally planned 14 stories
+* We completed 12, having lost 1 team member, cutting two stories. Others were merged during development into a single
 
-   ```bash
-    npx expo start
-   ```
+## Team Retrospective
 
-In the output, you'll find options to open the app in a
+### Team Member name
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- [a link to your pull requests]()
+- [a link to your issues]()
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+#### What was your role / which stories did you work on
 
-## Get a fresh project
++ What was the biggest challenge? 
++ Why was it a challenge?
+  + How was the challenge addressed?
++ Favorite / most interesting part of this project
++ If you could do it over, what would you change?
++ What is the most valuable thing you learned?
 
-When you're ready, run:
+### Logan Druley
+1. Logan's pull requests are [here](https://github.com/ldruley/movie-app/pulls?q=is%3Apr+author%3Aldruley+is%3Aclosed)
+1. Logans's Github issues are [here](https://github.com/ldruley/movie-app/issues?q=is%3Aissue%20state%3Aclosed%20assignee%3Aldruley)
 
-```bash
-npm run reset-project
-```
+#### What was your role / which stories did you work on
+I worked on the homepage (which displays trending movies), the movie details page, did some initial database setup and code, integrated movie details links into other pages, did some work on trying to unify the UI, and made the favorites API integration & page.
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
++ What was the biggest challenge? 
+  + Definitely ramping up on react native, and dealing with initial issues with the project relating to a teammate dropping and android emulator
++ Why was it a challenge?
+  + It's a short project window, we need to get up to speed on react native, in addition to having to get into a team rhythm with workflow and git
++ How was the challenge addressed?
+  + Just pushing through it and making the progress we could.
++ Favorite / most interesting part of this project
+  + React Native is pretty cool, it feels much faster to get going and iterate after the initial hurdles getting things going and understanding the tech
++ If you could do it over, what would you change?
+  + I would have thought through the database and api more, and I would have started with building reusable react components - they would help a lot towards unified design and also make it much easier to add new features since most api endpoints we could use have very similar data structures and it would be pretty trivial to add more features if we had a solid base of reusable components. I simply didn't have the comfort level to start out with this, not knowing how things fit together in react.
++ What is the most valuable thing you learned?
+  + If you hardcode api params for testing, make sure you leave yourself a comment... don't ask. I didn't lose hours on this.
 
-## Learn more
 
-To learn more about developing your project with Expo, look at the following resources:
+## Conclusion
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- How successful was the project?
+  - It was reasonably successful, I was pretty concerned for a bit about what we would be able to complete but it did come together I think - the features we have work well under testing and it looks decent too. We could have done more features, but went for polish on what we had, which was the correct decision we think.
+- What was the largest victory?
+   - Just getting the project to come together, initially it was quite the skeleton but once we got our features in, all of a sudden it started to feel like something worth showing.
+- Final assessment of the project
+   - It's ultimately a simple app, for anything past a school project you'd want to do a lot more, but it does what it does well and we were able to get a decent bit of polish on it for a development time that was so short (and shorter still due to issues getting going). There's no major issues with functionality, it's fast and looks decent. 
