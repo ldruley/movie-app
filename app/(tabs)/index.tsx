@@ -14,7 +14,6 @@ interface Movie {
   release_date: string;
   vote_average: number;
   backdrop_path: string;
-  is_fav: boolean;
 }
 
 export default function HomeScreen() {
@@ -35,7 +34,6 @@ export default function HomeScreen() {
       let url = `${BASE_URL}/movie/popular?language=en-US&page=1&api_key=${API_KEY}`;
       const response = await fetch(url);
       const data = await response.json();
-      console.log(data);
       setMovies(data.results);
       setIsLoading(false);
     } catch (error) {

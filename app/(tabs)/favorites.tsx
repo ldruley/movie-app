@@ -13,7 +13,6 @@ interface Movie {
     release_date: string;
     vote_average: number;
     backdrop_path: string;
-    isFav: boolean;
   }
 
 const favorites : React.FC = () => {
@@ -40,7 +39,6 @@ const favorites : React.FC = () => {
           let url = `https://api.themoviedb.org/3/list/8512518?api_key=${TMDB_API_KEY}&session_id=${SESSION_ID}&language=en-US&page=1`;
           const response = await fetch(url);
           const data = await response.json();
-          console.log(data);
           setMovies(data.items);
           setIsLoading(false);
         } catch (error) {
@@ -62,7 +60,6 @@ const favorites : React.FC = () => {
             releaseDate: item.release_date,
             voteAverage: item.vote_average,
             backdrop: `https://image.tmdb.org/t/p/w500${item.backdrop_path}`,
-            isFav: 'true',
             }
         }}
         asChild
