@@ -92,13 +92,9 @@ export default function HomeScreen() {
     }
   };
 
-
   return (
     <View style={styles.mainContainer}>
-      <View style={styles.headerContainer}>
-        
-      </View>
-
+      <View style={styles.headerContainer}></View>
       <View style={styles.searchSection}>
         <TextInput
           style={styles.searchInput}

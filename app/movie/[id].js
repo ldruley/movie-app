@@ -108,9 +108,9 @@ export default function MovieDetails() {
           <Text style={styles.releaseDate}>
             {unreleased ? "Releasing" : "Released"} {formatDate(releaseDate)}
           </Text>
-          
+        
           <View style={styles.divider} />
-          
+        
           <View style={styles.overviewContainer}>
             <Text style={styles.overviewTitle}>Overview</Text>
             <Text style={styles.overview}>{overview}</Text>

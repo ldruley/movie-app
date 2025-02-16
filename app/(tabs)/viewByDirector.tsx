@@ -92,10 +92,7 @@ const MovieSearch: React.FC = () => {
         </TouchableOpacity>
       </View>
 
-
       {loading && <ActivityIndicator size="large" color="#007bff" />}
-
-
       {error ? <Text style={styles.error}>{error}</Text> : null}
 
       {/* Movies List */}
@@ -119,8 +116,6 @@ const MovieSearch: React.FC = () => {
             asChild >
             <TouchableOpacity>
               <View style={styles.movieCard}>
-
-
                 {item.poster_path ? (
                   <Image source={{ uri: `https://image.tmdb.org/t/p/w200${item.poster_path}` }} style={styles.image} />
                 ) : (
@@ -130,8 +125,6 @@ const MovieSearch: React.FC = () => {
                 )}
                 <Text style={styles.movieTitle}>{item.title}</Text>
                 {item.release_date && <Text style={styles.releaseDate}>{item.release_date}</Text>}
-
-
               </View>
             </TouchableOpacity>
           </Link>

@@ -48,7 +48,7 @@ export default function HomeScreen() {
   const renderMovie = ({ item }: { item: Movie }) => (
     <View style={styles.movieWrapper}>
       <Link
-      href={{
+        href={{
           pathname: "/movie/[id]" as const,
           params: { 
           id: item.id,
@@ -59,16 +59,16 @@ export default function HomeScreen() {
           voteAverage: item.vote_average,
           backdrop: `https://image.tmdb.org/t/p/w500${item.backdrop_path}`,
           }
-      }}
-      asChild
+        }}
+        asChild
       > 
         <TouchableOpacity style={styles.movieItem}>
-            <Image
+          <Image
             source={{ 
                 uri: `https://image.tmdb.org/t/p/w500${item.poster_path}`
             }}
             style={styles.poster}
-            />
+          />
         </TouchableOpacity>
       </Link>
     </View>
@@ -84,19 +84,19 @@ export default function HomeScreen() {
   }
 
   return (
-      <View style={styles.container}>
-        <View style={{ paddingVertical: 15 }}>
-          <ThemedText style={styles.headerTitle}>Trending Movies</ThemedText>
-        </View>
-          
-        <FlatList<Movie>
-          data={movies}
-          renderItem={renderMovie}
-          keyExtractor={item => item.id.toString()}
-          numColumns={2}
-          contentContainerStyle={styles.movieGrid}
-        />
+    <View style={styles.container}>
+      <View style={{ paddingVertical: 15 }}>
+        <ThemedText style={styles.headerTitle}>Trending Movies</ThemedText>
       </View>
+        
+      <FlatList<Movie>
+        data={movies}
+        renderItem={renderMovie}
+        keyExtractor={item => item.id.toString()}
+        numColumns={2}
+        contentContainerStyle={styles.movieGrid}
+      />
+    </View>
   );
 };
 
