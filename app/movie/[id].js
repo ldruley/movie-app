@@ -1,12 +1,13 @@
 import { View, Image, Text, StyleSheet, ScrollView, SafeAreaView, Pressable, Alert } from 'react-native';
 import { useLocalSearchParams, Stack } from 'expo-router';
-import { useState, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 
 export default function MovieDetails() {
   const { id, title, poster, overview, releaseDate, voteAverage, backdrop } = useLocalSearchParams();
+  const [unreleased, setUnreleased] = useState(true);
   const TMDB_API_KEY = '44ec8af5d85873cf6fb611abda4911da';
-  const SESSION_ID = '7ab47c74efc5f1efef6cbbddb5f155f8095f1796'
+  const SESSION_ID = '7ab47c74efc5f1efef6cbbddb5f155f8095f1796';
 
   //format our date string
   const formatDate = (dateString) => {
@@ -21,6 +22,15 @@ export default function MovieDetails() {
     }
   };
   const [isFav, setIsFavorite] = useState(false);
+
+  useEffect(() => {
+    const date = new Date(releaseDate);
+    const now = new Date();
+    if(date.getTime() > now.getTime()) {
+      setUnreleased(true);
+    } else
+      setUnreleased(false);
+  }, []);
   
   //Check if this movie is favorited already when the screen is focused
   useFocusEffect(
@@ -86,14 +96,18 @@ export default function MovieDetails() {
         />
         <View style={styles.contentContainer}>
           <View style={styles.titleContainer}>
-            <Text style={styles.title}>{title}</Text>
+            <Text style={styles.title}>
+            {unreleased ? title + " (Unreleased)" : title}
+          </Text>
             <View style={styles.ratingContainer}>
               <Text style={styles.ratingText}>{parseFloat(voteAverage).toFixed(1)}</Text>
               <Text style={styles.ratingLabel}>Rating</Text>
             </View>
           </View>
           
-          <Text style={styles.releaseDate}>Released {formatDate(releaseDate)}</Text>
+          <Text style={styles.releaseDate}>
+            {unreleased ? "Releasing" : "Released"} {formatDate(releaseDate)}
+          </Text>
           
           <View style={styles.divider} />
           

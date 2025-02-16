@@ -17,7 +17,6 @@ interface Movie {
 
 const favorites : React.FC = () => {
     const TMDB_API_KEY = '44ec8af5d85873cf6fb611abda4911da';
-    const ACCOUNT_ID = '21771161';
     const SESSION_ID = '7ab47c74efc5f1efef6cbbddb5f155f8095f1796'
 
     const [movies, setMovies] = useState<Movie[]>([]);
