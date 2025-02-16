@@ -82,7 +82,7 @@ export default function MovieDetails() {
           <View style={styles.titleContainer}>
             <Text style={styles.title}>{title}</Text>
             <View style={styles.ratingContainer}>
-              <Text style={styles.ratingText}>{voteAverage}</Text>
+              <Text style={styles.ratingText}>{parseFloat(voteAverage).toFixed(1)}</Text>
               <Text style={styles.ratingLabel}>Rating</Text>
             </View>
           </View>
