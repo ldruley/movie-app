@@ -83,6 +83,7 @@ const favorites : React.FC = () => {
         </View>
         );
     }
+    
     return (
       <View style={styles.container}>
         <View style={{ paddingVertical: 15 }}>
@@ -98,7 +99,6 @@ const favorites : React.FC = () => {
         />
       </View>
     );
-
 };
 
 const styles = StyleSheet.create({

@@ -94,7 +94,6 @@ export default function HomeScreen() {
           contentContainerStyle={styles.movieGrid}
         />
       </View>
-    
   );
 };
 
