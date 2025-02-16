@@ -23,12 +23,14 @@ export default function HomeScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation();
 
+  //on load, create/get database and fetch trending movies, set navigation header
   useEffect(() => {
     fetchMovies();
     initDatabase();
     navigation.setOptions({ headerShown: true });
   }, [navigation]);
 
+  //Fetch trending movies from api
   const fetchMovies = async () => {
     try {
       let url = `${BASE_URL}/movie/popular?language=en-US&page=1&api_key=${API_KEY}`;
@@ -42,6 +44,7 @@ export default function HomeScreen() {
     }
   };
 
+  //Render movie list
   const renderMovie = ({ item }: { item: Movie }) => (
     <View style={styles.movieWrapper}>
       <Link
@@ -71,6 +74,7 @@ export default function HomeScreen() {
     </View>
   );
 
+  //Display loading indicator while fetching movies
   if (isLoading) {
     return (
       <View>
@@ -80,7 +84,6 @@ export default function HomeScreen() {
   }
 
   return (
-
       <View style={styles.container}>
         <View style={{ paddingVertical: 15 }}>
           <ThemedText style={styles.headerTitle}>Trending Movies</ThemedText>
@@ -98,7 +101,6 @@ export default function HomeScreen() {
 };
 
 const styles = StyleSheet.create({
-
   headerTitle: {
     fontSize: 25,
     fontWeight: 'bold',

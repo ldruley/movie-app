@@ -1,13 +1,14 @@
 import { View, Image, Text, StyleSheet, ScrollView, SafeAreaView, Pressable, Alert } from 'react-native';
 import { useLocalSearchParams, Stack } from 'expo-router';
-import { useEffect, useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 
 export default function MovieDetails() {
   const { id, title, poster, overview, releaseDate, voteAverage, backdrop } = useLocalSearchParams();
   const TMDB_API_KEY = '44ec8af5d85873cf6fb611abda4911da';
-  const ACCOUNT_ID = '21771161';
   const SESSION_ID = '7ab47c74efc5f1efef6cbbddb5f155f8095f1796'
+
+  //format our date string
   const formatDate = (dateString) => {
     try {
       return new Date(dateString).toLocaleDateString('en-US', {
@@ -20,12 +21,15 @@ export default function MovieDetails() {
     }
   };
   const [isFav, setIsFavorite] = useState(false);
+  
+  //Check if this movie is favorited already when the screen is focused
   useFocusEffect(
     useCallback(() => {
       checkFavorites();
     }, [])
   );
 
+  //Check if this movie is favorited already, and update the state
   const checkFavorites = async () => {
     try {
       const url = `https://api.themoviedb.org/3/list/8512518/item_status?api_key=${TMDB_API_KEY}&session_id=${SESSION_ID}&movie_id=${id}&language=en-US`;
@@ -41,6 +45,8 @@ export default function MovieDetails() {
       }
        
   };
+
+  //Toggle favorite status of the movie to the API and update the button
   const toggleFavorite = async () => {
     try {
       const url = isFav
@@ -95,6 +101,7 @@ export default function MovieDetails() {
             <Text style={styles.overviewTitle}>Overview</Text>
             <Text style={styles.overview}>{overview}</Text>
           </View>
+
           <Pressable style={[styles.favoriteButton, isFav ? styles.favoriteButtonActive : {}]} onPress={toggleFavorite}>
             <Text style={styles.favoriteButtonText}>
               {isFav ? 'Remove from Favorites' : 'Add to Favorites'}

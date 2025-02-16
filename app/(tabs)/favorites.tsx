@@ -24,16 +24,19 @@ const favorites : React.FC = () => {
     const [isLoading, setIsLoading] = useState(true);
     const navigation = useNavigation();
 
+    //Set navigation header
     useEffect(() => {
         navigation.setOptions({ headerShown: true });
     }, [navigation]);
 
+    //Fetch movies on focus
     useFocusEffect(
       useCallback(() => {
         fetchMovies();
       }, [])
     );
 
+    //Get favorite movies list from api
     const fetchMovies = async () => {
         try {
           let url = `https://api.themoviedb.org/3/list/8512518?api_key=${TMDB_API_KEY}&session_id=${SESSION_ID}&language=en-US&page=1`;
@@ -47,6 +50,8 @@ const favorites : React.FC = () => {
         }
       };
 
+
+    //Render movie list
     const renderMovie = ({ item }: { item: Movie }) => (
       <View style={styles.movieWrapper}>
         <Link
@@ -76,6 +81,7 @@ const favorites : React.FC = () => {
     </View>
     );
     
+    //Check if loading
     if (isLoading) {
         return (
         <View>
@@ -83,7 +89,7 @@ const favorites : React.FC = () => {
         </View>
         );
     }
-    
+
     return (
       <View style={styles.container}>
         <View style={{ paddingVertical: 15 }}>
