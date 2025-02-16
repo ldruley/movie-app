@@ -14,6 +14,7 @@ interface Movie {
   release_date: string;
   vote_average: number;
   backdrop_path: string;
+  is_fav: boolean;
 }
 
 export default function HomeScreen() {

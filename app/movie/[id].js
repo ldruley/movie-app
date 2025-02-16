@@ -20,7 +20,6 @@ export default function MovieDetails() {
     }
   };
   const [isFav, setIsFavorite] = useState(false);
-
   useFocusEffect(
     useCallback(() => {
       checkFavorites();
@@ -29,7 +28,7 @@ export default function MovieDetails() {
 
   const checkFavorites = async () => {
     try {
-      const url = `https://api.themoviedb.org/3/list/8512518/item_status?api_key=${TMDB_API_KEY}&session_id=${SESSION_ID}&movie_id=${id}&language=en-US&movie_id=939243`;
+      const url = `https://api.themoviedb.org/3/list/8512518/item_status?api_key=${TMDB_API_KEY}&session_id=${SESSION_ID}&movie_id=${id}&language=en-US`;
       const response = await fetch(url);
       const data = await response.json();
       console.log(data);
@@ -50,7 +49,7 @@ export default function MovieDetails() {
       const url = isFav
       ? `https://api.themoviedb.org/3/list/8512518/remove_item?api_key=${TMDB_API_KEY}&session_id=${SESSION_ID}`
       : `https://api.themoviedb.org/3/list/8512518/add_item?api_key=${TMDB_API_KEY}&session_id=${SESSION_ID}`;
-
+      console.log(id);
       const response = await fetch(
         url,
         {
@@ -60,6 +59,7 @@ export default function MovieDetails() {
       });
 
       const data = await response.json();
+      console.log(data)
       if (response.ok) {
         setIsFavorite(!isFav);
         Alert.alert('Success', `${title} has been ${isFav ? 'removed from' : 'added to'} favorites!`);

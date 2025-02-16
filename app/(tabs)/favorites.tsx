@@ -13,6 +13,7 @@ interface Movie {
     release_date: string;
     vote_average: number;
     backdrop_path: string;
+    isFav: boolean;
   }
 
 const favorites : React.FC = () => {
@@ -61,6 +62,7 @@ const favorites : React.FC = () => {
             releaseDate: item.release_date,
             voteAverage: item.vote_average,
             backdrop: `https://image.tmdb.org/t/p/w500${item.backdrop_path}`,
+            isFav: 'true',
             }
         }}
         asChild
