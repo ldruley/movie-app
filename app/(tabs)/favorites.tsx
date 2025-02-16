@@ -1,9 +1,9 @@
-import { Image, StyleSheet, View, TouchableOpacity, FlatList, Dimensions, ActivityIndicator } from 'react-native';
+import { Image, StyleSheet, View, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import React, {useState, useEffect, useCallback} from 'react';
 import { Link } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
-import { Stack, useNavigation } from 'expo-router';
+import { useNavigation } from 'expo-router';
 
 interface Movie {
     id: number;

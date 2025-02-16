@@ -1,5 +1,4 @@
 import { Image, StyleSheet, TextInput, View, Text, TouchableOpacity, FlatList, Pressable } from 'react-native';
-import { ThemedText } from '@/components/ThemedText';
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigation } from 'expo-router';
 const API_KEY = '5382c57e3a10e4ee81ac236e9d652dac';
