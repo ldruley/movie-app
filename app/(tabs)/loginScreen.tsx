@@ -1,35 +1,29 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, Text, Alert, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';  // Import useRouter
-import { getUsers } from '../../database';  // Import the getUsers function
+
+import { getUserByIdentifier } from '../../database';  
 
 const LoginScreen: React.FC = () => {
-  const [email, setEmail] = useState<string>('');     
-  const [password, setPassword] = useState<string>(''); 
-  const router = useRouter();  
+  const [identifier, setIdentifier] = useState<string>(''); // Accept username or email
+  const [password, setPassword] = useState<string>('');
+  const router = useRouter();
 
   const handleLogin = async () => {
-    if (!email || !password) {
+    if (!identifier || !password) {
       Alert.alert('Error', 'Both fields are required');
       return;
     }
-  
+
     try {
-      const users = await getUsers();
-      console.log('Fetched users:', users);
-  
-      const normalizedEmail = email.trim().toLowerCase();
-      const normalizedPassword = password.trim();
-  
-      const user = users.find(
-        (user) => user.email.toLowerCase() === normalizedEmail && user.password === normalizedPassword
-      );
-  
+      console.log('Attempting to log in with:', identifier);
+      const user = await getUserByIdentifier(identifier.trim(), password.trim());
+
       if (user) {
         Alert.alert('Success', 'Login successful!');
-        router.push('/');  // Navigate to Home
+        router.push('/'); // Navigate to Home
       } else {
-        Alert.alert('Error', 'Invalid email / Username or password');
+        Alert.alert('Error', 'Invalid username/email or password');
       }
     } catch (error) {
       console.error('Error during login:', error);
@@ -37,14 +31,15 @@ const LoginScreen: React.FC = () => {
     }
   };
 
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Login</Text>
       <TextInput
         style={styles.input}
         placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
+        value={identifier}
+        onChangeText={setIdentifier}
         keyboardType="email-address"
       />
       <TextInput

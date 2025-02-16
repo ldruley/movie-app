@@ -45,3 +45,18 @@ export const getUsers = async () => {
     throw error;
   }
 };
+
+export const getUserByIdentifier = async (identifier, password) => {
+  try {
+    const db = await SQLite.openDatabaseAsync("myDatabase.db");
+    const result = await db.getFirstAsync(
+      `SELECT * FROM users WHERE (email = ? OR name = ?) AND password = ?;`,
+      [identifier, identifier, password]
+    );
+    console.log("Fetched user by identifier:", result);
+    return result;
+  } catch (error) {
+    console.error('Error fetching user by identifier:', error);
+    throw error;
+  }
+};
