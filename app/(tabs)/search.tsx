@@ -1,4 +1,4 @@
-import { Image, StyleSheet, TextInput, View, Text, TouchableOpacity, FlatList, Pressable } from 'react-native';
+import { Image, StyleSheet, TextInput, View, Text, TouchableOpacity, FlatList, ScrollView } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigation } from 'expo-router';
 const API_KEY = '5382c57e3a10e4ee81ac236e9d652dac';
@@ -113,7 +113,7 @@ export default function HomeScreen() {
         </View>
 
         {showGenres && (
-          <View style={styles.genreList}>
+          <ScrollView style={styles.genreList}>
             {searchedGenres.map(genre => (
               <TouchableOpacity
                 key={genre.id}
@@ -124,7 +124,7 @@ export default function HomeScreen() {
                 <Text style={styles.genreText}>{genre.name}</Text>
               </TouchableOpacity>
             ))}
-          </View>
+          </ScrollView>
         )}
       </View>
 
@@ -158,10 +158,9 @@ export default function HomeScreen() {
                           backdrop: `https://image.tmdb.org/t/p/w500${item.backdrop_path}`,
                         }
                       }}
+                      style={styles.button}
                     >
-                      <Pressable style={styles.button}>
-                        <Text style={styles.viewMovieText}>View Movie</Text>
-                      </Pressable>
+                      <Text style={styles.viewMovieText}>View Movie</Text>
                     </Link>
                   </View>
                 </View>
@@ -295,12 +294,15 @@ const styles = StyleSheet.create({
   },
   movieWrapper: {
     marginBottom: 10,  
+    width: '100%',
   },
   button: {
     backgroundColor: '#34a1eb',
     padding: 10,
     borderRadius: 8,
-    alignItems: 'center',
+    width: 105,
+    alignContent: 'center',
+    marginTop: 10,
   },
   viewMovieText: {
     fontSize: 16,
