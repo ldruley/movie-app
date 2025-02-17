@@ -56,7 +56,19 @@ I worked on the homepage (which displays trending movies), the movie details pag
 I worked on the search page that allows a user to search movies by text input and to filter any searched movies by genres. Major functionalities included displaying
 the list of genres from TMDB API refernce list, searching for movie titles based on text input, selecting/deselecting genres from genre list for movie searches, and displaying details for searched movies when they are clicked.
 
+### Ethan Pimentel
 
+- https://github.com/ldruley/movie-app/issues?q=state%3Aclosed%20is%3Apr%20author%3A%40me
+- https://github.com/ldruley/movie-app/issues?q=is%3Aissue%20state%3Aclosed%20assignee%3APimentelEthan
+
+#### I worked on connecting the user login and registration info to the database as well as design a search by actor or director function.
+
++ Connecting the users input to the database
++ It didn't seem to route correctly when sent through. 
+  + I fixed the database.js routing in the folder as well as teh call to the databse when it was initialized in the login and registartion pages.
++ Seeing our ideas come to display.
++ Get the database started and connected earlier, first PR.
++ Everyone must be on the same page when it comes to completing their issues /stories, so the merges work properly.
 ## Conclusion
 
 - How successful was the project?
