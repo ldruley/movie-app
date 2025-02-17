@@ -49,6 +49,13 @@ I worked on the homepage (which displays trending movies), the movie details pag
 + What is the most valuable thing you learned?
   + If you hardcode api params for testing, make sure you leave yourself a comment... don't ask. I didn't lose hours on this.
 
+### Justin Ho
+1. Pull requests: https://github.com/ldruley/movie-app/pulls?q=is%3Apr+author%3AJjustinnHo+is%3Aclosed+
+2. Issues: https://github.com/ldruley/movie-app/issues?q=is%3Aissue%20state%3Aclosed%20assignee%3AJjustinnHo
+#### What was your role / which stories did you work on
+I worked on the search page that allows a user to search movies by text input and to filter any searched movies by genres. Major functionalities included displaying
+the list of genres from TMDB API refernce list, searching for movie titles based on text input, selecting/deselecting genres from genre list for movie searches, and displaying details for searched movies when they are clicked.
+
 
 ## Conclusion
 
